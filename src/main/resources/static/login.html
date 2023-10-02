@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Page</title>
+    <script>
+        function login() {
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+
+            var loginData = {
+                email: email,
+                password: password
+            };
+
+            fetch('/reg/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    if (data === 'Login Successful') {
+                        // Redirect to another page on successful login
+                        window.location.href = 'success.html';
+                    } else {
+                        // Display an alert for invalid credentials
+                        alert('Invalid credentials');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</head>
+<body>
+<h1>Login Page</h1>
+<form onsubmit="event.preventDefault(); login();">
+    <label for="email">Email:</label>
+    <input type="email" id="email" required><br><br>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" required><br><br>
+
+    <input type="submit" value="Login">
+</form>
+</body>
+</html>
