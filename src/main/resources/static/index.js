@@ -1,6 +1,7 @@
 function register()
 {
-    var url="http://localhost:8082/reg/new";
+    // var url="http://localhost:8082/reg/new";
+    var url="http://localhost:8080/reg/new";
     var password = document.getElementById("pass1").value;
     var retypePassword = document.getElementById("pass2").value;
     if (password !== retypePassword) {
