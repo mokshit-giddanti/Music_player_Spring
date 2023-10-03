@@ -57,22 +57,6 @@ function callApi(METHOD,URL,DATA,SUCCESS)
     };
     xhttp.send(DATA);
 }
-//function isPasswordValid(password) {
-// Define regex patterns for the requirements
-//var lengthPattern = /.{8,}/;
-// var capitalPattern = /[A-Z]/;
-// var numericPattern = /[0-9]/;
-//  var specialCharPattern = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\-]/;
-
-// Check each requirement
-//  var isLengthValid = lengthPattern.test(password);
-//  var hasCapitalLetter = capitalPattern.test(password);
-//  var hasNumericDigit = numericPattern.test(password);
-//  var hasSpecialChar = specialCharPattern.test(password);
-
-// Return true if all requirements are met
-//  return isLengthValid && hasCapitalLetter && hasNumericDigit && hasSpecialChar;
-//}
 function isLengthValid(password){
     var lengthPattern = /.{8,}/;
     var isLengthValid = lengthPattern.test(password);
@@ -102,15 +86,24 @@ function login() {
         password: password
     };
 
-    callApi("POST", "/auth/login", JSON.stringify(loginData), handleLoginResponse);
-}
-
-function handleLoginResponse(response) {
-    if (response === 'Login Successful') {
-        // Redirect to another page on successful login
-        window.location.href = 'success.html';
-    } else {
-        // Display an alert for invalid credentials
-        alert('Invalid credentials');
-    }
+    fetch('/reg/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+    })
+        .then(response => response.text())
+        .then(data => {
+            if (data === 'Login Successful') {
+                // Redirect to another page on successful login
+                window.location.href = 'success.html';
+            } else {
+                // Display an alert for invalid credentials
+                alert('Invalid credentials');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
