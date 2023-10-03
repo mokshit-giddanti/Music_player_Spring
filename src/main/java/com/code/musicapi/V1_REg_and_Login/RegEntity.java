@@ -16,6 +16,25 @@ public class RegEntity {
     private String email;
     private String name;
     private String password;
+
+    public RegEntity(Long id, String email, String name, String password) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
+    public RegEntity(String email, String name, String password) {
+        this.email = email;
+        this.name = name;
+        this.password = password;
+    }
+
+    // getters and setters
+
+    public RegEntity() {
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,5 +60,13 @@ public class RegEntity {
         this.password = password;
     }
 
-    // getters and setters
+    @Override
+    public String toString() {
+        return "RegEntity{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                '}';
+    }
 }
