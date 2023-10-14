@@ -1,40 +1,48 @@
-function register()
-{
-    // var url="http://localhost:8082/reg/new";
-    var url="http://localhost:8080/reg/new";
+function register() {
+    var name = document.getElementById("name1").value;
+    var email = document.getElementById("email1").value;
     var password = document.getElementById("pass1").value;
     var retypePassword = document.getElementById("pass2").value;
+
+    // Check if any of the fields are empty
+    if (!name || !email || !password || !retypePassword) {
+        document.getElementById("l1").innerText = "Please fill in all fields.";
+        return;
+    }
+
     if (password !== retypePassword) {
         document.getElementById("l1").innerText = "Passwords do not match!";
         return;
     }
 
     if (!isLengthValid(password)) {
-        document.getElementById("l1").innerText = "minimum password length is 8";
+        document.getElementById("l1").innerText = "Minimum password length is 8";
         return;
     }
-    if(!isNumeric(password)){
-        document.getElementById("l1").innerText = "password should contain a numeric value";
+    if (!isNumeric(password)) {
+        document.getElementById("l1").innerText = "Password should contain a numeric value";
         return;
     }
-    if(!containsCaps(password)){
-        document.getElementById("l1").innerText = "password should contain a capital";
+    if (!containsCaps(password)) {
+        document.getElementById("l1").innerText = "Password should contain a capital letter";
         return;
     }
-    if(!hasSpecial(password)){
-        document.getElementById("l1").innerText = "password should contain a specail character";
+    if (!hasSpecial(password)) {
+        document.getElementById("l1").innerText = "Password should contain a special character";
         return;
     }
 
-    var data=JSON.stringify({
-        "name":name1.value,
-        "email":email1.value,
-        "password":pass1.value
+    var url = "http://localhost:8082/reg/new";
 
+    var data = JSON.stringify({
+        "name": name,
+        "email": email,
+        "password": password
     });
 
-    callApi("POST",url,data,getResponse);
+    callApi("POST", url, data, getResponse);
 }
+
 function getResponse(res)
 {
     l2.innerText=res;
@@ -78,6 +86,7 @@ function hasSpecial(password){
     var hasSpecialChar = specialCharPattern.test(password);
     return hasSpecialChar;
 }
+
 function login() {
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
@@ -97,10 +106,10 @@ function login() {
         .then(response => response.text())
         .then(data => {
             if (data === 'Login Successful') {
-                // Redirect to another page on successful login
-                window.location.href = 'success.html';
+                // Set a session or token to indicate the user is logged in
+                sessionStorage.setItem('userLoggedIn', 'true');
+                window.location.href = 'MusicApi.html';
             } else {
-                // Display an alert for invalid credentials
                 alert('Invalid credentials');
             }
         })
@@ -108,3 +117,4 @@ function login() {
             console.error('Error:', error);
         });
 }
+
