@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Music API</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script type="text/javascript" src="index.js"></script>
     <script src="logoutTimer.js"></script>
     <style>
         * {
@@ -13,32 +13,20 @@
             box-sizing: border-box;
         }
 
-        /* Set a background color and font for the body */
+
         body {
-            background-color: #f0f0f0;
+            background-image: url('yourlie1.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
         }
 
-        /* Style for the header */
         .header {
             background-color: #1db954;
             color: #fff;
             padding: 20px;
             text-align: center;
         }
-
-        /* Style for the navigation bar */
-        /*.navbar {*/
-        /*    background-color: #333;*/
-        /*    color: #fff;*/
-        /*    padding: 10px;*/
-        /*    text-align: center;*/
-        /*}*/
-
-        /*.navbar-title {*/
-        /*    font-size: 24px;*/
-        /*    margin-bottom: 10px;*/
-        /*}*/
 
         /* Container for the main content */
         .container {
@@ -47,71 +35,99 @@
             padding: 20px;
         }
 
-        /* Section styling */
-        .section {
-            background-color: #fff;
-            margin: 20px 0;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Styling for featured playlists */
         .featured-playlists {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
             gap: 20px;
         }
 
-        .playlist {
+        .song-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+            margin: 20px;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            padding: 10px;
-            text-align: center;
+            background-color: #fff;
         }
 
-        .playlist img {
-            max-width: 100%;
+        .audio-controls {
+            width: 100%;
+        }
+
+        .song-details {
+            text-align: center;
         }
     </style>
 </head>
 <body>
-<video autoplay loop muted>
-    <source src="video.mp4" type="video/mp4">
-</video>
 <div class="navbar">
     <div class="navbar-title">MyMusic</div>
-    <a href="login.html">Login</a>
-    <a href="register.html">Register</a>
+    <a href="#">Favourite</a>
+    <a href="#">Playmusic</a>
     <div id="loginStatus" class="logout-button">
-        <!-- The login/logout button will be inserted here -->
+
     </div>
 </div>
+
 <div class="container">
     <div class="section">
-        <h2>Featured Playlists</h2>
-        <div class="featured-playlists">
-            <!-- Sample playlists - you can customize this section with your data -->
-            <div class="playlist">
-                <img src="playlist1.jpg" alt="Playlist 1">
-                <h3>Playlist 1</h3>
-            </div>
-            <!-- Add more playlists here -->
+        <h2>Featured Songs</h2>
+        <div class="featured-playlists" id="songList">
         </div>
     </div>
 </div>
 
 <script>
-    // Check if the user is logged in
+
     if (sessionStorage.getItem('userLoggedIn') === 'true') {
-        // Show the "Logout" button
+
         document.getElementById('loginStatus').innerHTML = '<a class="logout-button" onclick="logout()">Logout</a>';
 
-        // Call the initializeLogoutTimer function from the shared script to start the timer
         initializeLogoutTimer();
     } else {
-        // Redirect to the login page if the user is not logged in
         window.location.href = 'login.html';
     }
+    function listSongs() {
+        $.ajax({
+            type: 'GET',
+            url: '/songs',
+            success: function(data) {
+                var songList = $('#songList');
+                songList.empty();
+
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var song = data[i];
+
+
+                        var songBox = $('<div class="song-box"></div>');
+
+                        var songDetails = $('<div class="song-details"></div>');
+                        songDetails.append('<h2>' + song.title + '</h2>');
+                        songDetails.append('<br>')
+                        songDetails.append('<h3>' + song.artist + '</h3>');
+
+                        songBox.append(songDetails);
+                        var audioPlayer = $('<audio class="audio-controls" controls></audio>');
+                        audioPlayer.attr('src', song.filePath);
+                        songBox.append(audioPlayer);
+
+                        songList.append(songBox);
+                    }
+                } else {
+                    songList.append('<p>No songs found</p>');
+                }
+            },
+            error: function() {
+                alert('Error listing songs');
+            }
+        });
+    }
+    listSongs();
 </script>
 
 </body>
